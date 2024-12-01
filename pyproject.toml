@@ -10,6 +10,7 @@ package-mode = false
 python = "^3.13"
 pandas = "^2.2.3"
 pandas-stubs = "^2.2.3.241126"
+flake8-bugbear = "^24.10.31"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.3"
@@ -21,6 +22,9 @@ mypy = "^1.13.0"
 [tool.pytest.ini_options]
 log_cli = true
 log_cli_level = "INFO"
+
+[tool.isort]
+profile = "black"
 
 [build-system]
 requires = ["poetry-core"]
