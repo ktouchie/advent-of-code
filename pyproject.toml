@@ -4,9 +4,12 @@ version = "0.1.0"
 description = ""
 authors = ["Karin Touchie <ktouchie@gmail.com>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.13"
+pandas = "^2.2.3"
+pandas-stubs = "^2.2.3.241126"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.3"
@@ -14,6 +17,10 @@ black = "^24.10.0"
 flake8 = "^7.1.1"
 isort = "^5.13.2"
 mypy = "^1.13.0"
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "INFO"
 
 [build-system]
 requires = ["poetry-core"]
