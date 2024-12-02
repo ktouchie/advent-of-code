@@ -1,12 +1,14 @@
 import logging
 
 import pytest
+from pytest_mock import MockerFixture
 
 from aoc_2024.days.day02 import (
     check_difference,
     check_list_progression,
     check_list_safety,
     get_lists_from_file,
+    is_safe,
 )
 from aoc_2024.utils import get_input_file_path
 
@@ -50,16 +52,38 @@ class TestDay02:
     @pytest.mark.parametrize(
         "report_list, ascending, expected_result",
         [
-            (lists[0], False, 1),
-            (lists[1], True, 0),
-            (lists[2], False, 0),
-            (lists[3], True, 0),
-            (lists[4], False, 0),
-            (lists[5], True, 1),
+            (lists[0], False, True),
+            (lists[1], True, False),
+            (lists[2], False, False),
+            (lists[3], True, False),
+            (lists[4], False, False),
+            (lists[5], True, True),
         ],
     )
-    def test_check_list_progression(self, report_list, ascending, expected_result):
+    def test_check_list_progression(
+        self, mocker: MockerFixture, report_list, ascending, expected_result
+    ):
+        mocker.patch(
+            "aoc_2024.days.day02.check_difference", return_value=expected_result
+        )
         assert check_list_progression(report_list, ascending) == expected_result
 
+    @pytest.mark.parametrize(
+        "report_list, expected_result",
+        [
+            (lists[0], True),
+            (lists[1], False),
+            (lists[2], False),
+            (lists[3], True),
+            (lists[4], True),
+            (lists[5], True),
+        ],
+    )
+    def test_is_safe(self, mocker: MockerFixture, report_list, expected_result):
+        mocker.patch(
+            "aoc_2024.days.day02.check_list_progression", return_value=expected_result
+        )
+        assert is_safe(report_list) == expected_result
+
     def test_check_list_safety(self):
-        assert check_list_safety(lists) == 2
+        assert check_list_safety(lists) == 4

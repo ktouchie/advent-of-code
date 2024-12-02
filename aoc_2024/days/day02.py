@@ -16,15 +16,28 @@ def check_list_safety(report_lists):
     safe_lists = 0
     # Check each list for safety
     for report_list in report_lists:
-        if report_list[0] < report_list[1]:
-            safe_lists += check_list_progression(report_list, True)
-        elif report_list[0] > report_list[1]:
-            safe_lists += check_list_progression(report_list, False)
-        # Ignore equal numbers (unsafe)
+        if is_safe(report_list):
+            safe_lists += 1
+        else:
+            # Check if removing one element makes the list safe
+            for i in range(len(report_list)):
+                # All elements except the one at index i
+                modified_list = report_list[:i] + report_list[i + 1 :]
+                if is_safe(modified_list):
+                    safe_lists += 1
+                    break
 
     # Log the number of safe lists
     logger.info(f"Number of safe lists: {safe_lists}")
     return safe_lists
+
+
+def is_safe(report_list):
+    if len(report_list) < 2:
+        return False
+
+    ascending = report_list[0] < report_list[1]
+    return check_list_progression(report_list, ascending)
 
 
 def check_list_progression(report_list, ascending):
@@ -32,9 +45,9 @@ def check_list_progression(report_list, ascending):
     current_num = report_list[0]
     for i in report_list[1:]:
         if not check_difference(current_num, i, ascending):
-            return 0
+            return False
         current_num = i
-    return 1
+    return True
 
 
 def check_difference(first, second, ascending=True):
