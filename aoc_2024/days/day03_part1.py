@@ -12,9 +12,7 @@ def get_matches_from_file(input_file):
     # Read the input file and return a list of regex matches
     with open(input_file, "r") as f:
         content = f.read()
-    print(content)
     mul_matches = re.findall(mul_pattern, content)
-    logger.info(mul_matches)
     logger.info(f"Number of matches: {len(mul_matches)}")
     return mul_matches
 
@@ -37,7 +35,7 @@ def mul(match_list):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python day03.py <input_file>")
+        print("Usage: python day03_part1.py <input_file>")
         sys.exit(1)
 
     input_file = sys.argv[1]
