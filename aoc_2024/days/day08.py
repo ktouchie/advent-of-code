@@ -15,11 +15,11 @@ def get_grid_from_file(input_file):
 
 def parse_grid(grid):
     coordinates = defaultdict(list)
-    for row in grid:
-        for item in row:
+    for row_index, row in enumerate(grid):
+        for col_index, item in enumerate(row):
             if not item == ".":
                 # Add column and row to the coordinates
-                coordinates[item].append((row.index(item), grid.index(row)))
+                coordinates[item].append((col_index, row_index))
     logger.info(f"Coordinates: {coordinates}")
     return coordinates
 
@@ -45,17 +45,44 @@ def calculate_antinode(pair1, pair2):
     return (antinode_row1, antinode_col1), (antinode_row2, antinode_col2)
 
 
+def calculate_antinode2(antenna1, antenna2, grid):
+    antinodes = set()
+    nb_rows, nb_columns = len(grid), len(grid[0])
+    row1, col1 = antenna1
+    row2, col2 = antenna2
+
+    # Add the second antenna as an antinode
+    antinodes.add(antenna2)
+
+    # Calculate the direction of antennas
+    dx, dy = row2 - row1, col2 - col1
+
+    # Add the antinodes
+    newx, newy = row2 + dx, col2 + dy
+    while 0 <= newx < nb_columns and 0 <= newy < nb_rows:
+        antinodes.add((newx, newy))
+        newx += dx
+        newy += dy
+
+    return antinodes
+
+
 def add_antinodes(coordinates, grid):
     antinodes = set()
     for _key, values in coordinates.items():
         for i in range(len(values)):
             for j in range(i + 1, len(values)):
-                antinode1, antinode2 = calculate_antinode(values[i], values[j])
+                # Part 1
+                # antinode1, antinode2 = calculate_antinode(values[i], values[j])
+                #
+                # if check_coordinate_validity(*antinode1, grid):
+                #     antinodes.add(antinode1)
+                # if check_coordinate_validity(*antinode2, grid):
+                #     antinodes.add(antinode2)
 
-                if check_coordinate_validity(*antinode1, grid):
-                    antinodes.add(antinode1)
-                if check_coordinate_validity(*antinode2, grid):
-                    antinodes.add(antinode2)
+                # Part 2
+                antinodes.update(calculate_antinode2(values[i], values[j], grid))
+                antinodes.update(calculate_antinode2(values[j], values[i], grid))
     logger.info(f"Antinodes: {antinodes}")
     logger.info(f"Number of antinodes: {len(antinodes)}")
 
