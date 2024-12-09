@@ -45,7 +45,11 @@ def multiply(a, b):
     return a * b
 
 
-operators = [add, multiply]
+def concat(a, b):
+    return int(str(a) + str(b))
+
+
+operators = [add, multiply, concat]
 
 
 def main(input_file):
